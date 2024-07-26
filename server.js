@@ -2,6 +2,8 @@ const dotenv = require('dotenv')
 dotenv.config()
 const express = require('express')
 const mongoose = require('mongoose')
+const methodOverride = require('method-override')
+const morgan = require('morgan')
 
 const app = express()
 
@@ -16,6 +18,8 @@ const Car = require('./models/car.js')
 
 
 app.use(express.urlencoded({ extended: false }))
+app.use(methodOverride('_method'))
+app.use(morgan('dev'))
 
 
 app.get('/', (req, res) => {
@@ -31,6 +35,11 @@ app.get('/cars/new', (req, res) => {
     res.render('cars/new.ejs')
 })
 
+app.get('/cars/:carId', async (req, res) => {
+    const foundCar = await Car.findById(req.params.carId)
+    res.render('cars/show.ejs', { car: foundCar })
+})
+
 app.post('/cars', async (req, res) => {
     if (req.body.isRunning === 'on') {
         req.body.isRunning = true
@@ -39,6 +48,16 @@ app.post('/cars', async (req, res) => {
     }
     await Car.create(req.body)
     res.redirect('/cars')
+})
+
+app.delete('/cars/:carId', async (req, res) => {
+    await Car.findByIdAndDelete(req.params.carId)
+    res.redirect('/cars')
+})
+
+app.get('/cars/:carId/edit', async (req, res) => {
+    const foundCar = await Car.findById(req.params.carId)
+    res.render(cars/edit.js, { car: foundCar })
 })
 
 

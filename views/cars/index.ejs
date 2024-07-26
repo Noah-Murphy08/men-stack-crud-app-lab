@@ -9,8 +9,13 @@
     <h1>All Cars</h1>
     <ul>
         <% cars.forEach(car => { %>
-         <li><%= car.description %></li>
+        <li>
+            <a href="/cars/<%=car._id%>">
+                <%= car.description %>
+            </a>
+        </li>
         <% }) %>
     </ul>
+    <a href="/cars/new">Add Car</a>
 </body>
 </html>
