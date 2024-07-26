@@ -57,7 +57,17 @@ app.delete('/cars/:carId', async (req, res) => {
 
 app.get('/cars/:carId/edit', async (req, res) => {
     const foundCar = await Car.findById(req.params.carId)
-    res.render(cars/edit.js, { car: foundCar })
+    res.render('cars/edit.ejs', { car: foundCar })
+})
+
+app.put('/cars/:carId', async(req, res) => {
+    if (req.body.isRunning === 'on') {
+        req.body.isRunning = true
+    } else {
+        req.body.isRunning = false
+    }
+    await Car.findByIdAndUpdate(req.params.carId, req.body)
+    res.redirect(`/cars/${req.params.carId}`)
 })
 
 
